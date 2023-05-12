@@ -38,3 +38,6 @@ typedef struct AdjacencyListGraph
 //´´½¨Í¼
 void CreateAdjList(AdjList* graph);
 
+//´Ý»ÙÍ¼
+void DestroyAdjList(AdjList* graph);
+
