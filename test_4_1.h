@@ -56,6 +56,21 @@ void BFSM(AdjList* graph, int k, bool* visited);
 //广度优先遍历
 void BFSTraverseAL(AdjList* graph);
 
+//求某个顶点的度
+int VertexDegree(AdjList* graph, int num);
+
+//往图中插入一个顶点
+void VertexPush(AdjList* graph);
+
+//往图中插入一条边
+void ArcPush(AdjList* graph);
+
+//删去图中的某个顶点
+void VertexDele(AdjList* graph);
+
+//删去图中的某条边
+void ArcDele(AdjList* graph);
+
 
 //队列
 

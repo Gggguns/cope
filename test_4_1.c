@@ -86,7 +86,7 @@ void DFSTraverAL(AdjList* graph)
 //广度优先遍历的子程序
 void BFSM(AdjList* graph,int k,bool*visited)
 {
-	int i, j;
+	int i=0, j=0;
 	ArcNode* node;
 	Queue QU;
 	QueueInit(&QU);
@@ -130,6 +130,136 @@ void BFSTraverseAL(AdjList* graph)
 	}
 }
 
+//求某个顶点的度
+int VertexDegree(AdjList* graph, int num)
+{
+	int i = 0;
+	ArcNode* node = NULL;
+	if (num < VERTEX_MAX_NUM + 1)
+		node = graph->vertex[num - 1].firstarc;
+	while (node)
+	{
+		i++;
+		node = node->nextarc;
+	}
+	return i;
+}
+
+//往图中插入一个顶点
+void VertexPush(AdjList* graph)
+{
+	assert(graph);
+	if (graph->vexnum == VERTEX_MAX_NUM)
+	{
+		printf("顶点数据存放达到上限\n");
+		return;
+	}
+	printf("请输入顶点的信息：");
+	scanf("%c", &(graph->vertex[graph->vexnum].data));
+	graph->vertex[graph->vexnum].firstarc = NULL;
+	graph->vexnum++;
+
+}
+
+//往图中插入一条边
+void ArcPush(AdjList* graph)
+{
+	printf("请输入增加弧的信息（格式为“3，3”）：");
+	ArcNode* arcnode = NULL;
+	int i,j;
+	scanf("%d,%d", &i, &j);
+	arcnode = (ArcNode*)malloc(sizeof(ArcNode));
+	if (arcnode == NULL)
+	{
+		perror("ArcPush malloc fail");
+		return;
+	}
+	arcnode->adjvex = j;
+	arcnode->nextarc = graph->vertex[i].firstarc;
+	graph->vertex[i].firstarc = arcnode;
+}
+
+//删去图中的某个顶点
+void VertexDele(AdjList* graph)
+{
+	ArcNode* cur;
+	ArcNode* next;
+	printf("请输入要删除第几个节点：");
+	int i = 0;
+	scanf("%d", &i);
+	if (i == 0)
+	{
+		printf("输入违法数据\n");
+		return;
+	}
+	cur = graph->vertex[i - 1].firstarc;
+	//释放顶点的弧
+	while (cur)
+	{
+		next = cur->nextarc;
+		free(cur);
+		cur = next;
+	}
+	int j = 0;
+	//调整删除顶点后的各顶点位置
+	for (j = i - 1;j < graph->vexnum - 1;j++)
+	{
+		graph->vertex[j].data = graph->vertex[j + 1].data;
+		graph->vertex[j].firstarc = graph->vertex[j].firstarc;
+	}
+	graph->vexnum--;
+	//调整边的信息
+	for (j = 0;j < graph->vexnum;j++);
+	{
+		if (graph->vertex[j].firstarc->adjvex == i - 1)
+		{
+			ArcNode* Des = graph->vertex[j].firstarc;
+			graph->vertex[j].firstarc = Des->nextarc;
+			free(Des);
+		}
+		cur = graph->vertex[j].firstarc;
+		while (cur)
+		{
+			if (cur->adjvex > i - 1)
+				cur->adjvex--;
+			next = cur->nextarc;
+			if (next->adjvex == i - 1)
+			{
+				cur->nextarc = next->nextarc;
+				free(next);
+				next = cur->nextarc;
+			}
+			cur = next;
+		}
+	}
+}
+
+//删去图中的某条边
+void ArcDele(AdjList* graph)
+{
+	printf("请输入要删除弧的信息（格式为“3，3”）:\n");
+	int i=0, j=0;
+	scanf("%d,%d",&i,&j);
+	ArcNode* cur = graph->vertex[i].firstarc;
+	if (cur && cur->adjvex == j)
+	{
+		graph->vertex[i].firstarc = cur->nextarc;
+		free(cur);
+		cur = NULL;
+		return;
+	}
+	while (cur)
+	{
+		ArcNode* next = cur->nextarc;
+		if (next && next->adjvex == j)
+		{
+			cur->nextarc = next->nextarc;
+			free(next);
+			break;
+		}
+		cur = next;
+	}
+}
 
 //队列
 
