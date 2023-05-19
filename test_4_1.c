@@ -16,8 +16,8 @@ void CreateAdjList(AdjList* graph)
 	}
 	printf("请输入弧的信息（格式为“3，3”）:\n");
 	for (k = 0;k < graph->arcnum;k++)
-	{
-		
+	{ 
+		 
 		scanf("%d,%d", &i, &j);
 		arcnode = (ArcNode*)malloc(sizeof(ArcNode));
 		if (arcnode == NULL)
