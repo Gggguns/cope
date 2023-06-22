@@ -6,10 +6,10 @@ int main()
 	Queue QU;
 	QueueInit(&QU);
 	char ch;
-	QueueDataType x;
+	SQSTDataType x;
 	do
 	{
-		scanf("%d", &x);
+		scanf("%c", &x);
 		QueuePush(&QU, x);
 		ch = getchar();
 	} while (ch == ' ');
@@ -25,7 +25,7 @@ int main()
 	{
 		x = STTop(&ST);
 		STPop(&ST);
-		printf("%d ", x);
+		printf("%c ", x);
 	}
 	QueueDestroy(&QU);
 	STDestroy(&ST);
