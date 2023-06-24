@@ -35,6 +35,8 @@ HNode* HuFuManTreeCreate(int*arr,int size)
 		{
 			if (hu[j].parent == -1 && hu[j].weight < Min1)
 			{
+				Min2 = Min1;
+				Min2i = Min1i;
 				Min1 = hu[j].weight;
 				Min1i = j;
 			}
