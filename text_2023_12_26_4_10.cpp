@@ -25,9 +25,9 @@ struct File
 		}
 	}
 	//文件查找
-	bool Find(list<string>& Res, vector<string>& Cmp)
+	bool Find(vector<string>& Res, vector<string>& Cmp)
 	{
-		bool flag = false;
+		bool Ret = false;
 		bitset<11> B;
 		//对文件内容进行逐行查找
 		for (auto& ConEle : _v)
@@ -36,27 +36,29 @@ struct File
 			transform(str.begin(), str.end(),str.begin(), ::tolower);
 			//当前行判定
 			int i = 0;
+			bool Flag = false;
 			for (auto& e : Cmp)
 			{
 				if (str.find(e)!=string::npos)
 				{
 					B.set(i);
-					if (flag)
+					Flag = true;
+					if (Ret)
 						break;
 				}
 				i++;
 			}
 			//记录当前行内容查找结果
-			if (B.count() > 0)
+			if (Flag)
 			{
 				Res.push_back(str);
 				if (B.count() == Cmp.size())
 				{
-					flag = true;
+					Ret = true;
 				}
 			}
 		}
-		return flag;
+		return Ret;
 	}
 
 	
@@ -64,7 +66,7 @@ struct File
 	vector<string> _v;
 };
 
-void Split(vector<string>& Cmp)
+void Split(vector<string>& FindStr)
 {
 	size_t pos = 0;
 	string str;
@@ -78,25 +80,34 @@ void Split(vector<string>& Cmp)
 	for (pos = str.find(' ');pos != string::npos;pos = str.find(' ', pos + 1))
 	{
 		string tmp(str.begin() + posi, str.begin() + pos);
-		Cmp.push_back(tmp);
+		FindStr.push_back(tmp);
 		posi = pos+1;
 	}
 	string tmp(str.begin() + posi, str.end());
-	Cmp.push_back(tmp);
+	FindStr.push_back(tmp);
 }
 
 //输出
-void OutPut(int Sum,vector<string>Res)
+void OutPut(vector <vector< string >>& Res)
 {
+	int Sum = Res[0].size();
 	cout << Sum << endl;
-	if (Sum == 0)
+	if (Sum)
+	{
+		int i = 0;
+		for (auto Name : Res[0])
+		{
+			i++;
+			cout << Name << endl;
+			for (auto& Contant : Res[i])
+			{
+				cout << Contant << endl;
+			}
+		}
+	}
+	else
 	{
 		cout << "No Found\n";
-		return;
-	}
-	for (auto& e : Res)
-	{
-		cout << e << endl;
 	}
 }
 
@@ -128,27 +139,31 @@ int main()
 	//查找
 	int M = 0;
 	cin >> M;
+	vector<vector<string>> FindStrArr;
+	FindStrArr.resize(M);
 	for(i=0;i<M;i++)
 	{
-		int Sum = 0;
-		
-		vector<string> Cmp;
-
 		//拆分
-		Split(Cmp);
-		list<string> EndRes;
+		Split(FindStrArr[i]);
+	}
+	
+	
+	for (i = 0;i < M;i++)
+	{
+		vector <vector< string >> EndRes(1, vector<string>());
 		//遍历每个文件
 		for (auto& e : F)
 		{
-			list<string> TempRes;
-			if (e.Find(TempRes, Cmp))
+			vector<string> TempRes;
+			if (e.Find(TempRes, FindStrArr[i]))
 			{
-				Sum++;
-			}			
-			
+				EndRes[0].push_back(e._name);
+				EndRes.push_back(TempRes);
+			}
 		}
-		cout << Sum << endl;
+		OutPut(EndRes);
 	}
+	
 	
 	return 0;
 }
